@@ -1,0 +1,59 @@
+
+		ResponseEntity<String> response = null;
+
+		// ADD basic auth later
+	
+		// basically validateToken API will not be there but, direct method call will be there in all the other
+		//resource APIs to validate the received token along with the sent userName
+		//Validate token API will be needed if App login page is needed to add with O-Auth.so 
+		// the PTM app can hit this war and generate/validate  token.
+		// request token is not required since new call is to made again.
+		String jwtString = null;
+		JSONObject responseJSON = new JSONObject();
+		//if(EkaStringUtil.isNotEmpty(request)){
+			JSONObject jsonValue = JSONObject.fromObject(request);
+			jwtString = jsonValue.getString("access_token");
+		//}
+		
+		 String secret = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
+		    Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret), 
+		                                    SignatureAlgorithm.HS256.getJcaName());
+		    Jws<Claims> jwt = null;
+try {
+		   jwt = Jwts.parserBuilder()
+		            .setSigningKey(hmacKey)
+		            .build()
+		            .parseClaimsJws(jwtString);
+}
+		catch(SignatureException se) {
+			se.printStackTrace();
+			 logger.info("inside catch block" +se);
+			 
+			 responseJSON.clear();
+			 responseJSON.put("status", "Failed");
+			 responseJSON.put("Description", "Token Signature is tampered. Request blocked");
+			 response = new ResponseEntity(responseJSON.toString(3), HttpStatus.OK);
+				//logger.info("JWT string parsed to json " +jwt);
+				return response;
+				
+		}catch (ExpiredJwtException expiredException) {
+			
+			expiredException.printStackTrace();
+			 logger.info("inside catch block" +expiredException);
+			 
+			 responseJSON.clear();
+			 responseJSON.put("status", "Failed");
+			 responseJSON.put("Description", "Token is expired. Request another token");
+			 response = new ResponseEntity(responseJSON.toString(3), HttpStatus.OK);
+				//logger.info("JWT string parsed to json " +jwt);
+				return response;
+		}
+		 
+responseJSON.clear();
+responseJSON.put("status", "Success");
+responseJSON.put("Description", "Token Validation Successful.");
+		
+		response = new ResponseEntity(responseJSON.toString(3), HttpStatus.OK);
+		logger.info("JWT string parsed to json " +jwt);
+		return response;
+	

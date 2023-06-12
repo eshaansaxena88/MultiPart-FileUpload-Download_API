@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload Example</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5 border-dark">
+        <h1>File Upload System</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="fileInput">Select File:</label>
+                <input type="file" class="form-control-file" id="fileInput" name="file">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="uploadFile()">Upload</button>
+        </form>
+
+        <div id="responseMessage" class="mt-3"></div>
+    </div>
+
+    <!-- Add Bootstrap JavaScript (optional, only required for certain components) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Add your custom script -->
+    <script src="js/script.js"></script>
+</body>
+</html>
